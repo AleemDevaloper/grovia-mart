@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 680" fill="none">
+  <rect width="720" height="680" rx="40" fill="#F5E9D7"/>
+  <circle cx="595" cy="112" r="52" fill="#D6E7BA"/>
+  <ellipse cx="360" cy="584" rx="194" ry="28" fill="#173B2C" fill-opacity=".12"/>
+  <path d="M259 140h202l-17 63 39 333c2 19-13 36-32 36H269c-19 0-34-17-32-36l39-333-17-63Z" fill="#F6A948"/>
+  <path d="M259 140h202l-9 37H268l-9-37ZM239 512h260l4 24c2 19-13 36-32 36H269c-19 0-34-17-32-36l2-24Z" fill="#D67832"/>
+  <path d="M281 232h158v179H281z" fill="#FFF9EC"/>
+  <path d="M304 300c28-38 77-38 111 0-31 34-80 34-111 0Z" fill="#E9B84F"/>
+  <path d="M320 284c7 25 6 46-2 64m34-77c7 27 7 55-1 84m34-74c5 22 5 41-1 60" stroke="#D89129" stroke-width="8" stroke-linecap="round"/>
+  <text x="360" y="270" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="3">GROCERIES</text>
+  <text x="360" y="375" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="22" font-weight="800" letter-spacing="2">CRISP BITES</text>
+  <text x="360" y="398" text-anchor="middle" fill="#6B7568" font-family="Arial,sans-serif" font-size="12" letter-spacing="2">ILLUSTRATIVE PACK</text>
+</svg>

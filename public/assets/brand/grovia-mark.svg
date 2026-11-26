@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Grovia Mart mark">
+  <defs>
+    <linearGradient id="gm-green" x1="8" y1="6" x2="54" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#16A34A"/>
+      <stop offset=".55" stop-color="#117A42"/>
+      <stop offset="1" stop-color="#083B25"/>
+    </linearGradient>
+    <linearGradient id="gm-leaf" x1="34" y1="8" x2="54" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7FF7A"/>
+      <stop offset="1" stop-color="#7FD91C"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="19" fill="url(#gm-green)"/>
+  <path d="M46 9c1 13-5 21-17 23 0-12 6-20 17-23Z" fill="url(#gm-leaf)"/>
+  <path d="M21 41c0-10 7-17 17-18-1 11-7 17-17 18Z" fill="#C6F76B" opacity=".9"/>
+  <path d="M43 15c-6 5-11 11-15 19" fill="none" stroke="#0B3A27" stroke-linecap="round" stroke-width="2.4" opacity=".55"/>
+  <circle cx="47" cy="49" r="5.2" fill="#FF7900"/>
+  <path d="M25 30c-5 0-9 4-9 9s4 9 9 9c4 0 7-2 8-5h-8v-5h14c.3 1 .4 2 .4 3 0 8-6 13-14 13-8 0-14-6-14-14s6-14 14-14c4 0 7 1 10 4l-4 4c-2-2-4-3-6-3Z" fill="#FFFDF8" opacity=".92"/>
+</svg>

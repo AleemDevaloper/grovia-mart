@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 650">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f8f6ed"/>
+      <stop offset=".55" stop-color="#edf1df"/>
+      <stop offset="1" stop-color="#d8e4bf"/>
+    </linearGradient>
+    <linearGradient id="basket" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#d8a55c"/>
+      <stop offset="1" stop-color="#9d6937"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="24" stdDeviation="18" flood-color="#45633a" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <rect width="760" height="650" rx="44" fill="url(#bg)"/>
+  <circle cx="570" cy="132" r="92" fill="#edf6d6" opacity=".9"/>
+  <circle cx="168" cy="560" r="72" fill="#dceabf" opacity=".75"/>
+  <g filter="url(#shadow)">
+    <ellipse cx="402" cy="544" rx="238" ry="42" fill="#879764" opacity=".16"/>
+    <path d="M201 382c6-48 44-82 92-82h230c48 0 86 34 92 82l-42 156H243Z" fill="url(#basket)"/>
+    <path d="M222 390h372l-27 31H249Z" fill="#e7c27e"/>
+    <path d="M247 421h322l-26 117H273Z" fill="#bd8144"/>
+    <g opacity=".42" stroke="#f1d69b" stroke-width="8">
+      <path d="M286 418v126"/><path d="M338 418v126"/><path d="M390 418v126"/><path d="M442 418v126"/><path d="M494 418v126"/>
+    </g>
+  </g>
+  <g filter="url(#shadow)">
+    <circle cx="322" cy="307" r="68" fill="#dc6b55"/>
+    <circle cx="306" cy="288" r="18" fill="#ed9881" opacity=".75"/>
+    <path d="M319 242c-2-34 16-58 48-69 6 33-10 59-48 69Z" fill="#4f7d49"/>
+    <circle cx="425" cy="291" r="76" fill="#f1bc45"/>
+    <path d="M424 216c-16-37 2-70 39-89 16 40 2 69-39 89Z" fill="#5d854e"/>
+    <circle cx="531" cy="321" r="64" fill="#8aac66"/>
+    <circle cx="513" cy="302" r="16" fill="#bbce9a" opacity=".8"/>
+    <path d="M526 257c-12-37 7-67 43-82 10 37-5 64-43 82Z" fill="#47784a"/>
+  </g>
+  <g filter="url(#shadow)">
+    <ellipse cx="252" cy="390" rx="65" ry="46" fill="#8ca95a"/>
+    <ellipse cx="241" cy="373" rx="21" ry="27" fill="#b4c87d"/>
+    <ellipse cx="273" cy="368" rx="22" ry="29" fill="#75964d"/>
+    <ellipse cx="350" cy="397" rx="68" ry="52" fill="#6f9a54"/>
+    <circle cx="331" cy="380" r="17" fill="#9ebd74"/>
+    <circle cx="375" cy="374" r="14" fill="#a8c47a"/>
+  </g>
+  <g>
+    <path d="M598 230c-34-23-49-58-44-104 38 9 65 44 44 104Z" fill="#75a05a"/>
+    <path d="M608 238c24-43 58-61 103-55-10 43-45 67-103 55Z" fill="#9ab96d"/>
+  </g>
+  <g fill="#fff" opacity=".86">
+    <circle cx="111" cy="144" r="7"/><circle cx="136" cy="132" r="4"/><circle cx="626" cy="410" r="5"/>
+  </g>
+  <text x="402" y="604" fill="#5d7254" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="4" text-anchor="middle">THE DAILY MARKET EDIT</text>
+</svg>
