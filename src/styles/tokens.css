@@ -33,6 +33,16 @@
   --surface: #fffdf8;
   --surface-soft: #fbf8f1;
 
+  /* Luxury finish: quieter paper, hairline structure, gold editorial accents */
+  --ivory: #fdfbf6;
+  --ivory-2: #f6f1e7;
+  --gold-ink: #96743f;
+  --gold-line: rgba(166, 132, 86, 0.34);
+  --gold-line-soft: rgba(166, 132, 86, 0.18);
+  --hair: rgba(10, 31, 21, 0.08);
+  --hair-strong: rgba(10, 31, 21, 0.14);
+  --gold-on-dark: #e4cfa6;
+
   /* Type */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -54,6 +64,9 @@
   --shadow-md: 0 22px 50px -28px rgba(10, 31, 21, 0.34);
   --shadow-lg: 0 48px 90px -46px rgba(10, 31, 21, 0.48);
   --shadow-lime: 0 18px 32px -18px rgba(120, 190, 10, 0.6);
+  --shadow-card: 0 1px 2px rgba(10, 31, 21, 0.04), 0 20px 40px -32px rgba(10, 31, 21, 0.42);
+  --shadow-lift: 0 2px 4px rgba(10, 31, 21, 0.05), 0 34px 60px -36px rgba(10, 31, 21, 0.5);
+  --shadow-float: 0 26px 56px -30px rgba(10, 31, 21, 0.5);
 
   /* Layout */
   --container: 1240px;

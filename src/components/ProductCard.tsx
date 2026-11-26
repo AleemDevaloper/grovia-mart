@@ -1,4 +1,5 @@
-import { Heart, Plus } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Heart, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Product } from '../types'
 import { discountPercent, money } from '../lib/format'
@@ -16,9 +17,17 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   const discount = discountPercent(product.price, product.comparePrice)
   const soldOut = !product.inStock || product.stockQuantity <= 0
 
+  const [justAdded, setJustAdded] = useState(false)
+  const confirmTimer = useRef<number | undefined>(undefined)
+
+  useEffect(() => () => window.clearTimeout(confirmTimer.current), [])
+
   const add = () => {
     addToCart(product)
     notify(`${product.name} added to your basket`)
+    setJustAdded(true)
+    window.clearTimeout(confirmTimer.current)
+    confirmTimer.current = window.setTimeout(() => setJustAdded(false), 1400)
   }
 
   return (
@@ -69,13 +78,19 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           </span>
           <button
             type="button"
-            className="product-card__add"
+            className={`product-card__add ${justAdded ? 'is-added' : ''}`}
             onClick={add}
             disabled={soldOut}
             aria-label={`Add ${product.name} to basket`}
             style={soldOut ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
           >
-            {inCart > 0 ? <span className="product-card__count">{inCart}</span> : <><Plus size={14} /><span>Add</span></>}
+            {justAdded ? (
+              <><Check size={14} /><span>Added</span></>
+            ) : inCart > 0 ? (
+              <span className="product-card__count">{inCart}</span>
+            ) : (
+              <><Plus size={14} /><span>Add</span></>
+            )}
           </button>
         </div>
       </div>

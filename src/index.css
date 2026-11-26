@@ -5,3 +5,5 @@
 @import './styles/storefront.css';
 @import './styles/admin.css';
 @import './styles/premium.css';
+/* Luxury finish pass — must stay last so it overrides every earlier layer. */
+@import './styles/luxury.css';

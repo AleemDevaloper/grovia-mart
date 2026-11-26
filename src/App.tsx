@@ -2,12 +2,14 @@ import { ArrowRight, Clock3, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { WhatsAppSupportButton } from './components/WhatsAppSupport'
 import { ShoppingAssistant } from './components/ShoppingAssistant'
 import { ToastContainer } from './components/ToastContainer'
 import { notify } from './lib/toast'
+import { api } from './lib/api'
 import { handleImageFallback } from './utils/imageFallback'
 import { useStore } from './store'
 
@@ -53,6 +55,18 @@ function CartDrawer() {
   const navigate = useNavigate()
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
+  const { data: zonesData } = useQuery({
+    queryKey: ['delivery-zones'],
+    queryFn: api.delivery.zones,
+    staleTime: 5 * 60 * 1000,
+  })
+  const thresholds = (zonesData?.data ?? [])
+    .map((zone) => zone.freeDeliveryThreshold)
+    .filter((value) => Number.isFinite(value) && value > 0)
+  const threshold = thresholds.length > 0 ? Math.min(...thresholds) : 0
+  const remaining = Math.max(0, threshold - subtotal)
+  const progress = threshold > 0 ? Math.min(100, Math.round((subtotal / threshold) * 100)) : 0
+
   return (
     <>
       {cartOpen && <button className="overlay" onClick={() => setCartOpen(false)} aria-label="Close cart" />}
@@ -70,6 +84,20 @@ function CartDrawer() {
           <div><small>Grovia market</small><h2 id="cart-title">Your basket</h2></div>
           <button className="cart-drawer__close" onClick={() => setCartOpen(false)} aria-label="Close cart"><X size={20} /></button>
         </div>
+        {cart.length > 0 && threshold > 0 && (
+          <div className="cart-drawer__ship">
+            <p>
+              {remaining > 0 ? (
+                <>Add <strong>Rs. {remaining.toLocaleString('en-PK')}</strong> more for free delivery</>
+              ) : (
+                <><strong>Free delivery mark reached</strong> — applies to eligible areas</>
+              )}
+            </p>
+            <span className="ship-bar">
+              <i className="ship-bar__fill" style={{ width: `${progress}%` }} />
+            </span>
+          </div>
+        )}
         <div className="cart-drawer__items">
           {cart.length === 0 ? (
             <div className="cart-empty"><span className="cart-empty__icon"><ShoppingBag size={28} /></span><h3>Your basket is empty</h3><p>Add fresh groceries to get started.</p></div>
