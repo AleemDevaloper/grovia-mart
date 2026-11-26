@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useSyncExternalStore, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft,
@@ -9,6 +9,7 @@ import {
   Clock3,
   Leaf,
   RotateCcw,
+  Search,
   ShieldCheck,
   Sparkles,
   Star,
@@ -35,6 +36,8 @@ const tabs = [
   { key: 'offers', label: 'Offers' },
 ] as const
 
+const popularSearches = ['Fresh fruit', 'Eggs', 'Chicken', 'Rice']
+
 type TabKey = (typeof tabs)[number]['key']
 
 const values = [
@@ -46,7 +49,9 @@ const values = [
 
 export function HomePage() {
   const { data: home, isLoading, error } = useHome()
+  const navigate = useNavigate()
   const [tab, setTab] = useState<TabKey>('seasonal')
+  const [searchTerm, setSearchTerm] = useState('')
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState('')
   const [subscribeError, setSubscribeError] = useState('')
@@ -84,6 +89,16 @@ export function HomePage() {
     copy: value.copy,
   })) ?? values
   const heroContent = siteHome?.hero
+
+  const searchGrovia = (term: string) => {
+    const query = term.trim()
+    navigate(query ? `/shop?q=${encodeURIComponent(query)}` : '/shop')
+  }
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    searchGrovia(searchTerm)
+  }
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -150,6 +165,34 @@ export function HomePage() {
               >
                 {heroContent?.lead ?? 'A considered grocery market for modern homes — fresh produce, trusted pantry staples, snacks, sweets and chilled drinks, delivered in the slot you choose.'}
               </motion.p>
+
+              <motion.div
+                className="hero-discovery"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.32 }}
+              >
+                <form className="hero-search" role="search" onSubmit={submitSearch}>
+                  <Search className="hero-search__icon" size={19} aria-hidden="true" />
+                  <label className="sr-only" htmlFor="homepage-search">Search Grovia groceries</label>
+                  <input
+                    id="homepage-search"
+                    type="search"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Search fresh food, pantry and more"
+                  />
+                  <button type="submit">Search <ArrowRight size={15} /></button>
+                </form>
+                <div className="hero-search__popular" aria-label="Popular searches">
+                  <span>Popular</span>
+                  {popularSearches.map((term) => (
+                    <button type="button" key={term} onClick={() => searchGrovia(term)}>
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
 
               <motion.div
                 className="hero__actions"
