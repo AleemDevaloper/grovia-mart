@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 680" fill="none">
+  <rect width="720" height="680" rx="40" fill="#EEE8D9"/>
+  <circle cx="584" cy="116" r="62" fill="#D5E4C5"/>
+  <ellipse cx="360" cy="580" rx="210" ry="26" fill="#173B2C" fill-opacity=".12"/>
+  <path d="M205 189h142v330H205z" fill="#6C9A63"/>
+  <path d="M220 207h112v176H220z" fill="#F8F2E6"/>
+  <path d="M220 397h112v102H220z" fill="#C5D79F"/>
+  <path d="M240 253c14-22 33-22 48-5 12-15 28-13 38 3v87h-86v-85Z" fill="#D4AB4F"/>
+  <text x="276" y="236" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="2">GROVIA</text>
+  <path d="M387 307h112v210H387z" fill="#C48354"/>
+  <path d="M396 279h94v37h-94z" fill="#A95F3E"/>
+  <path d="M403 338h80v112h-80z" fill="#F8F2E6"/>
+  <circle cx="443" cy="382" r="24" fill="#E8C06F"/>
+  <text x="443" y="428" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="12" font-weight="700">PANTRY</text>
+  <text x="360" y="548" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="2">ILLUSTRATIVE GROCERY PACKS</text>
+</svg>

@@ -53,6 +53,10 @@ npm.cmd run dev
 The Vite development server normally runs at `http://localhost:5173`. API-backed flows
 require the Laravel API at the URL configured in `.env.local`.
 
+The checked-in `dist/` is a static storefront preview built with the reserved
+`https://api.invalid/api` URL. It contains no backend code or data; API-dependent catalog,
+account, order, and checkout features require a deployed Laravel API.
+
 For Vercel, set the project root to `grovia-mart`, use `npm run build` with output
 directory `dist`, and configure `VITE_API_URL` to the HTTPS Laravel API URL ending in
 `/api`. Production builds fail if this variable is missing, points to localhost, or does
