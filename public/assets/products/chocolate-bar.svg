@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 680" fill="none">
+  <rect width="720" height="680" rx="40" fill="#F0E2DA"/>
+  <circle cx="588" cy="117" r="58" fill="#E7C8AE"/>
+  <ellipse cx="360" cy="578" rx="190" ry="26" fill="#173B2C" fill-opacity=".12"/>
+  <path d="m238 234 242-75 79 265-242 75-79-265Z" fill="#D6AF7C"/>
+  <path d="m253 239 217-67 65 235-217 67-65-235Z" fill="#68412F"/>
+  <path d="m279 256 73-23 19 67-73 23-19-67Zm93-29 73-23 19 67-73 23-19-67Zm-57 105 73-23 19 67-73 23-19-67Zm93-29 73-23 19 67-73 23-19-67Z" fill="#8A5A43" stroke="#C9A07A" stroke-width="5"/>
+  <path d="m198 309 54-17 58 202-54 17-58-202Z" fill="#F8F3E8"/>
+  <text x="260" y="382" transform="rotate(-16 260 382)" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="2">GROVIA</text>
+  <text x="260" y="408" transform="rotate(-16 260 408)" text-anchor="middle" fill="#174530" font-family="Arial,sans-serif" font-size="11" font-weight="800" letter-spacing="1">CHOCOLATE</text>
+  <text x="360" y="537" text-anchor="middle" fill="#6B7568" font-family="Arial,sans-serif" font-size="11" letter-spacing="2">ILLUSTRATIVE PACK</text>
+</svg>
