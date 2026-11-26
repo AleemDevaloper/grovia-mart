@@ -229,9 +229,9 @@ export function HomePage() {
                 )}
               </div>
               <div className="hero__seal" aria-hidden="true">
-                <strong>Delivery</strong>
-                <span>options</span>
-                <small>slots at checkout</small>
+                <strong>100%</strong>
+                <span>Fresh promise</span>
+                <small>picked daily</small>
               </div>
               <div className="hero__float hero__float--top">
                 <span className="hero__float__icon">
@@ -247,8 +247,8 @@ export function HomePage() {
                   <Clock3 size={16} />
                 </span>
                 <div>
-                  <strong>Delivery options</strong>
-                  <small>Confirmed for your area</small>
+                  <strong>Slot delivery</strong>
+                  <small>Choose your hour</small>
                 </div>
               </div>
             </motion.div>
