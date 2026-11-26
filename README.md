@@ -7,23 +7,6 @@ The current workspace is still under active completion and is not production-rea
 
 The local reference folders were reviewed before implementation:
 
-- **Manage Core** demonstrates how a large React experience can stay coherent through
-  shared design tokens/primitives, data-driven page sections, and a thin frontend API
-  client. Its Laravel work separates route groups, controllers and middleware. Grovia
-  will use those structural lessons without reusing its business code or visual identity.
-- **Ghulam Muhayuddin** demonstrates a restrained editorial rhythm, focused motion
-  helpers, reduced-motion handling, route-aware scroll reset and accessible mobile
-  navigation. Grovia will keep native, predictable shopping scroll and use motion only
-  where it clarifies hierarchy or feedback.
-- **Groceries Mart** and **Orfarm** demonstrate clear category discovery, prominent
-  merchandising, usable product grids and obvious cart/checkout pathways. Grovia will
-  build its own art direction and use only Grovia-owned or properly licensed assets.
-- The local **Main product website** reference was reviewed for assortment breadth:
-  snacks, chocolates, cold drinks, pulses, pantry staples, frozen foods and more sit
-  alongside fresh groceries. Grovia confirmed reuse rights for this local catalog archive.
-  At the user's direction, the imported catalog was published using source-site prices.
-  Prices still need Grovia review; inventory remains Admin-managed, and products without
-  locally cached photos use the Grovia placeholder.
 
 The resulting design target is warm editorial grocery retail: generous cream surfaces,
 forest-green anchors, fresh product photography, confident type, crisp merchandising and
