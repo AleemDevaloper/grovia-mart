@@ -46,6 +46,12 @@ export function Header() {
   }, [])
 
   useEffect(() => {
+    const openSearch = () => setSearchOpen(true)
+    window.addEventListener('grovia:open-search', openSearch)
+    return () => window.removeEventListener('grovia:open-search', openSearch)
+  }, [])
+
+  useEffect(() => {
     if (!primaryColor || !accentColor) return
     const root = document.documentElement
     const previous = {

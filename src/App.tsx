@@ -4,6 +4,7 @@ import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Header } from './components/Header'
+import { MobileTabBar } from './components/MobileTabBar'
 import { Footer } from './components/Footer'
 import { WhatsAppSupportButton } from './components/WhatsAppSupport'
 import { ShoppingAssistant } from './components/ShoppingAssistant'
@@ -151,10 +152,16 @@ function CartDrawer() {
 export default function App() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
+  const showMobileTabBar = !isAdmin && pathname !== '/checkout' && !pathname.startsWith('/product/')
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }, [pathname])
+
+  useEffect(() => {
+    document.body.classList.toggle('has-mobile-tabbar', showMobileTabBar)
+    return () => document.body.classList.remove('has-mobile-tabbar')
+  }, [showMobileTabBar])
 
   return (
     <>
@@ -187,6 +194,7 @@ export default function App() {
         </motion.div>
       </AnimatePresence>
       {!isAdmin && <Footer />}
+      {showMobileTabBar && <MobileTabBar />}
       {!isAdmin && <WhatsAppSupportButton />}
       {!isAdmin && <ShoppingAssistant />}
       {!isAdmin && <CartDrawer />}
