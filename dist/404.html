@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4efe6" />
+    <title>Page not found | Grovia Mart</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: #0a1f15;
+        background: #f4efe6;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(800px 500px at 10% 0%, #c6f76b33, transparent 65%),
+          linear-gradient(160deg, #fbf9f2, #f1eee4);
+      }
+
+      main {
+        width: min(100%, 560px);
+        padding: clamp(28px, 7vw, 56px);
+        border: 1px solid #0b3a2718;
+        border-radius: 28px;
+        background: #fffdf8e8;
+        box-shadow: 0 32px 80px -56px #0b3a2780;
+        text-align: center;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 48px;
+        color: #0b3a27;
+        text-decoration: none;
+      }
+
+      .brand strong {
+        font: 500 36px/1 Georgia, "Times New Roman", serif;
+        letter-spacing: -0.07em;
+      }
+
+      .brand span {
+        color: #6d806f;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+      }
+
+      .eyebrow {
+        color: #96743f;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+      }
+
+      h1 {
+        margin: 14px 0;
+        font: 500 clamp(32px, 8vw, 48px)/1.08 Georgia, "Times New Roman", serif;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0 auto;
+        max-width: 380px;
+        color: #62746a;
+        line-height: 1.7;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 30px;
+      }
+
+      .actions a {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        border: 1px solid #0b3a27;
+        border-radius: 999px;
+        background: #0b3a27;
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .actions a.secondary {
+        background: transparent;
+        color: #0b3a27;
+      }
+
+      .actions a:focus-visible {
+        outline: 3px solid #a5f21b;
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="brand" href="/" aria-label="Grovia Mart home">
+        <strong>Grovia</strong><span>MART</span>
+      </a>
+      <p class="eyebrow">404 · PAGE NOT FOUND</p>
+      <h1>This page isn't on the shelf.</h1>
+      <p>The address may be outdated or unavailable. Let's get you back to fresh groceries.</p>
+      <div class="actions">
+        <a href="/shop">Browse groceries</a>
+        <a class="secondary" href="/">Go home</a>
+      </div>
+    </main>
+  </body>
+</html>
