@@ -1,6 +1,6 @@
 import { ArrowRight, Clock3, Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Header } from './components/Header'
@@ -10,6 +10,7 @@ import { WhatsAppSupportButton } from './components/WhatsAppSupport'
 import { ShoppingAssistant } from './components/ShoppingAssistant'
 import { ToastContainer } from './components/ToastContainer'
 import { BrandLoadingScreen } from './components/BrandLoader'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { notify } from './lib/toast'
 import { api } from './lib/api'
 import { handleImageFallback } from './utils/imageFallback'
@@ -191,7 +192,7 @@ export default function App() {
               <Route path="/admin/*" element={<AdminPage />} />
               <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="/:slug" element={<InfoPage />} />
-              <Route path="*" element={<main className="shop-empty"><h1>Page not found</h1><p>This page may have moved.</p><Link to="/">Return home</Link></main>} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
         </motion.div>

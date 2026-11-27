@@ -1,6 +1,7 @@
 import { ArrowRight, HelpCircle, ShieldCheck, Truck } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { useStorefrontSettings } from '../hooks/useCatalog'
+import { NotFoundPage } from './NotFoundPage'
 import type { SiteContentPage } from '../types'
 
 const pages: Record<string, { eyebrow: string; title: string; intro: string; sections: { title: string; body: string }[] }> = {
@@ -72,7 +73,9 @@ export function InfoPage() {
   const { data: storefrontSettings } = useStorefrontSettings()
   const page = storefrontSettings?.siteContent.pages[slug as keyof typeof storefrontSettings.siteContent.pages] as SiteContentPage | undefined
     ?? pages[slug]
-    ?? pages.about
+
+  if (!page) return <NotFoundPage />
+
   return (
     <main className="info-page">
       <header><span>{page.eyebrow}</span><h1>{page.title}</h1><p>{page.intro}</p></header>
