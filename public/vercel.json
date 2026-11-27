@@ -1,4 +1,21 @@
 {
+  "redirects": [
+    { "source": "/shop/", "destination": "/shop", "permanent": true },
+    { "source": "/delivery/", "destination": "/delivery", "permanent": true },
+    { "source": "/product/:id/", "destination": "/product/:id", "permanent": true },
+    { "source": "/checkout/", "destination": "/checkout", "permanent": true },
+    { "source": "/account/", "destination": "/account", "permanent": true },
+    { "source": "/account/reset-password/", "destination": "/account/reset-password", "permanent": true },
+    { "source": "/account/orders/:id/", "destination": "/account/orders/:id", "permanent": true },
+    { "source": "/admin/", "destination": "/admin", "permanent": true },
+    { "source": "/wishlist/", "destination": "/wishlist", "permanent": true },
+    { "source": "/about/", "destination": "/about", "permanent": true },
+    { "source": "/contact/", "destination": "/contact", "permanent": true },
+    { "source": "/faqs/", "destination": "/faqs", "permanent": true },
+    { "source": "/privacy/", "destination": "/privacy", "permanent": true },
+    { "source": "/terms/", "destination": "/terms", "permanent": true },
+    { "source": "/returns/", "destination": "/returns", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/shop", "destination": "/index.html" },
     { "source": "/shop/", "destination": "/index.html" },
