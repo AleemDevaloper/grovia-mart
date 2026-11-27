@@ -4,7 +4,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowRight,
   ChevronDown,
+  Download,
   Heart,
+  MapPin,
   Menu,
   Search,
   ShoppingBag,
@@ -33,8 +35,17 @@ export function Header() {
   const wishlist = useWishlist()
   const cart = useStore((state) => state.cart)
   const setCartOpen = useStore((state) => state.setCartOpen)
+  const deliveryPin = useStore((state) => state.deliveryPin)
+  const setDeliveryPin = useStore((state) => state.setDeliveryPin)
   const count = cartCount(cart)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [installGuideOpen, setInstallGuideOpen] = useState(false)
+  const [locationGuideOpen, setLocationGuideOpen] = useState(false)
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [appInstalled, setAppInstalled] = useState(false)
+  const [installError, setInstallError] = useState('')
+  const [locationError, setLocationError] = useState('')
+  const [locationLoading, setLocationLoading] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [query, setQuery] = useState('')
@@ -49,6 +60,32 @@ export function Header() {
     const openSearch = () => setSearchOpen(true)
     window.addEventListener('grovia:open-search', openSearch)
     return () => window.removeEventListener('grovia:open-search', openSearch)
+  }, [])
+
+  useEffect(() => {
+    const displayMode = window.matchMedia('(display-mode: standalone)')
+    const updateInstalled = () => {
+      setAppInstalled(displayMode.matches || ('standalone' in navigator && navigator.standalone === true))
+    }
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault()
+      setInstallPrompt(event as BeforeInstallPromptEvent)
+    }
+    const onInstalled = () => {
+      setAppInstalled(true)
+      setInstallPrompt(null)
+      setInstallGuideOpen(false)
+    }
+
+    updateInstalled()
+    displayMode.addEventListener('change', updateInstalled)
+    window.addEventListener('beforeinstallprompt', onBeforeInstall)
+    window.addEventListener('appinstalled', onInstalled)
+    return () => {
+      displayMode.removeEventListener('change', updateInstalled)
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
   }, [])
 
   useEffect(() => {
@@ -78,11 +115,13 @@ export function Header() {
   }, [accentColor, primaryColor])
 
   useEffect(() => {
-    if (!searchOpen && !mobileOpen) return
+    if (!searchOpen && !mobileOpen && !installGuideOpen && !locationGuideOpen) return
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setSearchOpen(false)
         setMobileOpen(false)
+        setInstallGuideOpen(false)
+        setLocationGuideOpen(false)
       }
     }
     document.body.classList.add('no-scroll')
@@ -91,7 +130,68 @@ export function Header() {
       document.body.classList.remove('no-scroll')
       window.removeEventListener('keydown', onKey)
     }
-  }, [searchOpen, mobileOpen])
+  }, [searchOpen, mobileOpen, installGuideOpen, locationGuideOpen])
+
+  const installApp = async () => {
+    if (!installPrompt) return
+    setInstallError('')
+    try {
+      await installPrompt.prompt()
+      const choice = await installPrompt.userChoice
+      setInstallPrompt(null)
+      if (choice.outcome === 'accepted') {
+        setAppInstalled(true)
+        setInstallGuideOpen(false)
+      }
+    } catch {
+      setInstallPrompt(null)
+      setInstallError('Your browser could not open the install prompt. Use the browser menu instructions below instead.')
+    }
+  }
+
+  const openInstallGuide = () => {
+    setInstallError('')
+    setMobileOpen(false)
+    setInstallGuideOpen(true)
+  }
+
+  const openLocationGuide = () => {
+    setLocationError('')
+    setMobileOpen(false)
+    setLocationGuideOpen(true)
+  }
+
+  const requestCurrentLocation = () => {
+    setLocationError('')
+    if (!navigator.geolocation) {
+      setLocationError('Location sharing is not available in this browser. You can still enter your address at checkout.')
+      return
+    }
+
+    setLocationLoading(true)
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setDeliveryPin({ latitude: coords.latitude, longitude: coords.longitude })
+        setLocationLoading(false)
+      },
+      (error) => {
+        setLocationLoading(false)
+        setLocationError(error.code === error.PERMISSION_DENIED
+          ? 'Location permission was not granted. You can still enter your address at checkout.'
+          : 'We could not get your location. Check your device settings and try again.')
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+    )
+  }
+
+  const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  const isAndroid = /Android/i.test(navigator.userAgent)
+  const installInstructions = isAppleMobile
+    ? 'Open this page in Safari, tap Share, then choose Add to Home Screen.'
+    : isAndroid
+      ? 'Open your browser menu and tap Install app or Add to Home screen.'
+      : 'Use the install icon in your browser’s address bar, or choose Install Grovia Mart from the browser menu.'
 
   const submitSearch = (event?: FormEvent) => {
     event?.preventDefault()
@@ -118,6 +218,9 @@ export function Header() {
           </span>
           <div className="announcement__links">
             <span>Pakistan · PKR</span>
+            <button type="button" className="announcement__location" onClick={openLocationGuide} aria-haspopup="dialog">
+              <MapPin size={13} /> {deliveryPin ? 'Location ready' : 'Set delivery location'}
+            </button>
             <Link to="/account">Track your order</Link>
             <Link to="/contact">Help &amp; support</Link>
           </div>
@@ -183,6 +286,7 @@ export function Header() {
               </Link>
             ))}
             <Link to="/shop?discount=true" className="nav-link">Offers</Link>
+            <Link to="/delivery" className={`nav-link ${isActive('/delivery') ? 'is-active' : ''}`}>Delivery</Link>
             <Link to="/about" className={`nav-link ${isActive('/about') ? 'is-active' : ''}`}>Our story</Link>
           </nav>
 
@@ -191,6 +295,12 @@ export function Header() {
               <Search size={19} />
               <span className="tool-btn__label">Search</span>
             </button>
+            {!appInstalled && (
+              <button type="button" className="tool-btn tool-btn--install" onClick={openInstallGuide} aria-label="Install Grovia Mart" aria-haspopup="dialog">
+                <Download size={18} />
+                <span className="tool-btn__label">Install</span>
+              </button>
+            )}
             <Link to="/account" className="tool-btn" aria-label="Account">
               <UserRound size={19} />
               <span className="tool-btn__label">{user ? user.name.split(' ')[0] : 'Account'}</span>
@@ -258,6 +368,98 @@ export function Header() {
       </AnimatePresence>
 
       <AnimatePresence>
+        {installGuideOpen && (
+          <motion.div
+            className="install-guide"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setInstallGuideOpen(false)
+            }}
+          >
+            <motion.section
+              className="install-guide__panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="install-guide-title"
+              initial={{ opacity: 0, y: 12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            >
+              <div className="install-guide__head">
+                <span className="install-guide__icon"><Download size={20} /></span>
+                <button type="button" className="search-layer__close" onClick={() => setInstallGuideOpen(false)} aria-label="Close install instructions">
+                  <X size={17} />
+                </button>
+              </div>
+              <span className="eyebrow">Grovia, wherever you shop</span>
+              <h2 id="install-guide-title">Add Grovia to your home screen.</h2>
+              <p>{installPrompt ? 'Install Grovia for quick access to your market, basket and orders.' : installInstructions}</p>
+              {installError && <p className="install-guide__error" role="alert">{installError}</p>}
+              {installPrompt ? (
+                <button type="button" className="btn btn--primary btn--block" onClick={() => void installApp()}>
+                  <Download size={16} /> Install Grovia app
+                </button>
+              ) : (
+                <button type="button" className="btn btn--primary btn--block" onClick={() => setInstallGuideOpen(false)}>Got it</button>
+              )}
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {locationGuideOpen && (
+          <motion.div
+            className="install-guide location-guide"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setLocationGuideOpen(false)
+            }}
+          >
+            <motion.section
+              className="install-guide__panel location-guide__panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="location-guide-title"
+              initial={{ opacity: 0, y: 12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+            >
+              <div className="install-guide__head">
+                <span className="install-guide__icon"><MapPin size={20} /></span>
+                <button type="button" className="search-layer__close" onClick={() => setLocationGuideOpen(false)} aria-label="Close location dialog">
+                  <X size={17} />
+                </button>
+              </div>
+              <span className="eyebrow">Your Grovia delivery</span>
+              <h2 id="location-guide-title">Set your delivery location.</h2>
+              <p>Share your current location to add an optional delivery pin at checkout. Grovia keeps it only for this visit; you can also enter your address manually.</p>
+              {deliveryPin && (
+                <p className="location-guide__status" role="status">
+                  Your location pin is ready for checkout.
+                </p>
+              )}
+              {locationError && <p className="install-guide__error" role="alert">{locationError}</p>}
+              <div className="location-guide__actions">
+                <button type="button" className="btn btn--primary btn--block" onClick={requestCurrentLocation} disabled={locationLoading}>
+                  <MapPin size={16} /> {locationLoading ? 'Finding your location…' : deliveryPin ? 'Update current location' : 'Use my current location'}
+                </button>
+                {deliveryPin && (
+                  <button type="button" className="location-guide__clear" onClick={() => setDeliveryPin(null)}>
+                    Remove location pin
+                  </button>
+                )}
+              </div>
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {mobileOpen && (
           <motion.div className="mobile-nav" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <button type="button" className="mobile-nav__backdrop" onClick={() => setMobileOpen(false)} aria-label="Close menu" />
@@ -277,10 +479,19 @@ export function Header() {
               <div className="mobile-nav__links">
                 <Link to="/shop" onClick={() => setMobileOpen(false)}>Shop all groceries <ArrowRight size={16} /></Link>
                 <Link to="/shop?discount=true" onClick={() => setMobileOpen(false)}>Offers &amp; deals <ArrowRight size={16} /></Link>
+                <Link to="/delivery" onClick={() => setMobileOpen(false)}>Delivery coverage <ArrowRight size={16} /></Link>
                 <Link to="/about" onClick={() => setMobileOpen(false)}>Our story <ArrowRight size={16} /></Link>
                 <Link to="/account" onClick={() => setMobileOpen(false)}>{user ? 'My account' : 'Sign in'} <ArrowRight size={16} /></Link>
                 <Link to="/wishlist" onClick={() => setMobileOpen(false)}>Saved items <ArrowRight size={16} /></Link>
+                <button type="button" className="mobile-location-link" onClick={openLocationGuide}>
+                  <span><MapPin size={16} /> Delivery location</span><ArrowRight size={16} />
+                </button>
                 <Link to="/contact" onClick={() => setMobileOpen(false)}>Contact us <ArrowRight size={16} /></Link>
+                {!appInstalled && (
+                  <button type="button" className="mobile-install-link" onClick={openInstallGuide}>
+                    <span><Download size={16} /> Install Grovia app</span><ArrowRight size={16} />
+                  </button>
+                )}
                 {user && user.role !== 'customer' && (
                   <Link to="/admin" onClick={() => setMobileOpen(false)}>Operations dashboard <ArrowRight size={16} /></Link>
                 )}
@@ -315,4 +526,9 @@ export function Header() {
       </AnimatePresence>
     </>
   )
+}
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
 }

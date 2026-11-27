@@ -14,6 +14,14 @@ const queryClient = new QueryClient({
 
 const Router = window.location.protocol === 'file:' ? HashRouter : BrowserRouter
 
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    void navigator.serviceWorker.register('/service-worker.js').catch((error: unknown) => {
+      console.error('Grovia offline support could not be enabled.', error)
+    })
+  })
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

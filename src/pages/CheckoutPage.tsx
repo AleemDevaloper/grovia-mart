@@ -20,10 +20,8 @@ type DeliveryForm = {
   area: string
   city: string
   notes: string
-  latitude: number | null
-  longitude: number | null
 }
-type DeliveryTextField = Exclude<keyof DeliveryForm, 'latitude' | 'longitude'>
+type DeliveryTextField = keyof DeliveryForm
 
 const initialDelivery: DeliveryForm = {
   recipient_name: '',
@@ -32,8 +30,6 @@ const initialDelivery: DeliveryForm = {
   area: '',
   city: 'Lahore',
   notes: '',
-  latitude: null,
-  longitude: null,
 }
 
 function getSlotAvailabilityText(slot: DeliverySlot, dateOffset: number) {
@@ -58,7 +54,17 @@ export function CheckoutPage() {
   const [searchParams] = useSearchParams()
   const { data: storefrontSettings } = useStorefrontSettings()
   const rewardCodeFromUrl = searchParams.get('reward')?.trim().toUpperCase() ?? ''
-  const { cart, clearCart, coupon, deliveryDate, deliverySlot, setCoupon, setDelivery } = useStore()
+  const {
+    cart,
+    clearCart,
+    coupon,
+    deliveryDate,
+    deliveryPin,
+    deliverySlot,
+    setCoupon,
+    setDelivery,
+    setDeliveryPin,
+  } = useStore()
   const { user } = useAuth()
   const [step, setStep] = useState<CheckoutStep>(1)
   const [deliveryForm, setDeliveryForm] = useState<DeliveryForm>(() => ({
@@ -86,7 +92,7 @@ export function CheckoutPage() {
   const [placedOrderId, setPlacedOrderId] = useState<number | null>(null)
   const [placedOrderTotal, setPlacedOrderTotal] = useState<number | null>(null)
   const [placedRewardDiscount, setPlacedRewardDiscount] = useState<number | null>(null)
-  const [locationState, setLocationState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
+  const [locationState, setLocationState] = useState<'idle' | 'loading' | 'error'>('idle')
   const [locationError, setLocationError] = useState('')
   const [couponCode, setCouponCode] = useState('')
   const [couponNotice, setCouponNotice] = useState('')
@@ -129,11 +135,8 @@ export function CheckoutPage() {
 
   const updateDeliveryForm = (field: DeliveryTextField, value: string) => {
     const changesAddress = field === 'address_line' || field === 'area' || field === 'city'
-    setDeliveryForm((current) => ({
-      ...current,
-      [field]: value,
-      ...(changesAddress ? { latitude: null, longitude: null } : {}),
-    }))
+    setDeliveryForm((current) => ({ ...current, [field]: value }))
+    if (changesAddress) setDeliveryPin(null)
     setSelectedAddressId(null)
     if (changesAddress) {
       setLocationState('idle')
@@ -144,6 +147,7 @@ export function CheckoutPage() {
   const chooseAddress = (id: string) => {
     const address = savedAddresses.find((item) => item.id === Number(id))
     setSelectedAddressId(address?.id ?? null)
+    setDeliveryPin(null)
     if (address) {
       setDeliveryForm({
         ...initialDelivery,
@@ -171,8 +175,8 @@ export function CheckoutPage() {
     setLocationState('loading')
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        setDeliveryForm((current) => ({ ...current, latitude: coords.latitude, longitude: coords.longitude }))
-        setLocationState('ready')
+        setDeliveryPin({ latitude: coords.latitude, longitude: coords.longitude })
+        setLocationState('idle')
       },
       (locationFailure) => {
         setLocationState('error')
@@ -270,9 +274,7 @@ export function CheckoutPage() {
       const result = await api.orders.create({
         items: cart.map((item) => ({ product_id: item.id, quantity: item.quantity })),
         ...(selectedAddressId ? { address_id: selectedAddressId } : { address: deliveryForm }),
-        ...(deliveryForm.latitude !== null && deliveryForm.longitude !== null
-          ? { delivery_location: { latitude: deliveryForm.latitude, longitude: deliveryForm.longitude } }
-          : {}),
+        ...(deliveryPin ? { delivery_location: deliveryPin } : {}),
         delivery_date: deliveryDate,
         delivery_slot: deliverySlot,
         payment_method: 'cod',
@@ -386,9 +388,9 @@ export function CheckoutPage() {
               <section className="checkout-location" aria-labelledby="checkout-location-title">
                 <div><h3 id="checkout-location-title">Delivery pin <span>Optional</span></h3><p>Share a precise drop-off point to help the delivery team find you.</p></div>
                 <button type="button" onClick={requestDeliveryLocation} disabled={locationState === 'loading'}>
-                  <MapPin size={15} />{locationState === 'loading' ? 'Finding your location…' : locationState === 'ready' ? 'Update location pin' : 'Share my current location'}
+                  <MapPin size={15} />{locationState === 'loading' ? 'Finding your location…' : deliveryPin ? 'Update location pin' : 'Share my current location'}
                 </button>
-                {locationState === 'ready' && deliveryForm.latitude !== null && deliveryForm.longitude !== null && (
+                {deliveryPin && (
                   <p className="checkout-location__status" role="status">Location pin saved with this order and shared with the delivery team.</p>
                 )}
                 {locationError && <p className="checkout-location__error" role="alert">{locationError}</p>}

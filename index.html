@@ -4,10 +4,217 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#16834A" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="description" content="Grovia Mart — premium fresh groceries delivered across Pakistan." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/grovia-192.png" />
     <title>Grovia Mart | Freshness at Your Fingertips</title>
+    <style>
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        background: #f5f2e9;
+      }
+
+      #grovia-startup-screen {
+        position: fixed;
+        z-index: 99999;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background:
+          radial-gradient(700px 460px at 14% 12%, rgba(198, 247, 107, 0.18), transparent 62%),
+          radial-gradient(640px 440px at 88% 86%, rgba(166, 132, 86, 0.12), transparent 62%),
+          linear-gradient(160deg, #fbf9f2, #f1eee4);
+        color: #0b3a27;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 420ms ease, visibility 420ms ease;
+      }
+
+      #grovia-startup-screen::before {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(11, 58, 39, 0.1) 0.7px, transparent 0.7px);
+        background-size: 30px 30px;
+        -webkit-mask-image: radial-gradient(ellipse at center, #000 0%, transparent 76%);
+        mask-image: radial-gradient(ellipse at center, #000 0%, transparent 76%);
+        content: '';
+        pointer-events: none;
+      }
+
+      #grovia-startup-screen.is-leaving {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .grovia-startup__content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 28px;
+      }
+
+      .grovia-startup__orbit {
+        position: relative;
+        display: grid;
+        width: 106px;
+        height: 106px;
+        place-items: center;
+        margin-bottom: 24px;
+      }
+
+      .grovia-startup__orbit img {
+        position: relative;
+        z-index: 1;
+        width: 66px;
+        height: 66px;
+        border-radius: 20px;
+        box-shadow: 0 16px 38px rgba(11, 58, 39, 0.18);
+      }
+
+      .grovia-startup__ring {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(11, 58, 39, 0.13);
+        border-top-color: #16834a;
+        border-right-color: #a68456;
+        border-radius: 50%;
+        animation: grovia-startup-spin 2.8s linear infinite;
+      }
+
+      .grovia-startup__dot {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #c6f76b;
+        box-shadow: 0 0 15px rgba(126, 181, 35, 0.6);
+      }
+
+      .grovia-startup__wordmark {
+        display: flex;
+        align-items: baseline;
+        gap: 9px;
+      }
+
+      .grovia-startup__wordmark strong {
+        font: 500 42px/1 Georgia, 'Times New Roman', serif;
+        letter-spacing: -0.07em;
+      }
+
+      .grovia-startup__wordmark span {
+        color: #6d806f;
+        font: 700 9px/1 Arial, sans-serif;
+        letter-spacing: 0.32em;
+      }
+
+      .grovia-startup__tagline {
+        margin: 12px 0 0;
+        color: #69766b;
+        font: 700 8px/1.5 Arial, sans-serif;
+        letter-spacing: 0.2em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .grovia-startup__status {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 44px 0 0;
+        color: #42584a;
+        font: 500 11px/1.5 Arial, sans-serif;
+        letter-spacing: 0.04em;
+      }
+
+      .grovia-startup__status i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #16834a;
+        animation: grovia-startup-pulse 1.2s ease-in-out infinite;
+      }
+
+      .grovia-startup__track {
+        width: min(230px, calc(100vw - 72px));
+        height: 2px;
+        margin-top: 15px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(11, 58, 39, 0.1);
+      }
+
+      .grovia-startup__track span {
+        display: block;
+        width: 38%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #16834a, #c6f76b, #a68456);
+        box-shadow: 0 0 12px rgba(22, 131, 74, 0.3);
+        animation: grovia-startup-sweep 1.35s ease-in-out infinite;
+      }
+
+      .grovia-startup__footer {
+        position: absolute;
+        right: 20px;
+        bottom: 24px;
+        left: 20px;
+        color: #758174;
+        font: 700 8px/1.5 Arial, sans-serif;
+        letter-spacing: 0.2em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      @keyframes grovia-startup-spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes grovia-startup-sweep {
+        from { transform: translateX(-120%); }
+        to { transform: translateX(380%); }
+      }
+
+      @keyframes grovia-startup-pulse {
+        50% { opacity: 0.35; transform: scale(0.75); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #grovia-startup-screen,
+        #grovia-startup-screen * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="grovia-startup-screen" role="status" aria-label="Loading Grovia Mart" aria-live="polite">
+      <div class="grovia-startup__content">
+        <div class="grovia-startup__orbit" aria-hidden="true">
+          <span class="grovia-startup__ring"></span>
+          <span class="grovia-startup__dot"></span>
+          <img src="./assets/brand/grovia-mark.svg" alt="" />
+        </div>
+        <div class="grovia-startup__wordmark"><strong>Grovia</strong><span>MART</span></div>
+        <p class="grovia-startup__tagline">Freshness at your fingertips</p>
+        <p class="grovia-startup__status"><i aria-hidden="true"></i>Opening your market</p>
+        <div class="grovia-startup__track" role="progressbar" aria-label="Preparing Grovia Mart" aria-valuetext="Opening your market">
+          <span></span>
+        </div>
+      </div>
+      <div class="grovia-startup__footer" aria-hidden="true">Fresh groceries · thoughtful living · Grovia Mart</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

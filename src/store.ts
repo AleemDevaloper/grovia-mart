@@ -12,10 +12,16 @@ export type AppliedCoupon = {
   label: string
 }
 
+export type DeliveryPin = {
+  latitude: number
+  longitude: number
+}
+
 type Store = {
   cart: CartItem[]
   wishlist: number[]
   cartOpen: boolean
+  deliveryPin: DeliveryPin | null
   deliveryDate: string
   deliverySlot: string
   deliveryAddress: string
@@ -26,6 +32,7 @@ type Store = {
   updateQuantity: (id: number, quantity: number) => void
   clearCart: () => void
   setCartOpen: (open: boolean) => void
+  setDeliveryPin: (pin: DeliveryPin | null) => void
   toggleWishlist: (id: number) => void
   setWishlist: (ids: number[]) => void
   clearWishlist: () => void
@@ -39,6 +46,7 @@ export const useStore = create<Store>()(
       cart: [],
       wishlist: [],
       cartOpen: false,
+      deliveryPin: null,
       deliveryDate: todayISO(),
       deliverySlot: 'Within 60 minutes',
       deliveryAddress: 'Gulberg III, Lahore',
@@ -72,6 +80,7 @@ export const useStore = create<Store>()(
         })),
       clearCart: () => set({ cart: [], coupon: null }),
       setCartOpen: (open) => set({ cartOpen: open }),
+      setDeliveryPin: (deliveryPin) => set({ deliveryPin }),
       toggleWishlist: (id) =>
         set((state) => ({
           wishlist: state.wishlist.includes(id)

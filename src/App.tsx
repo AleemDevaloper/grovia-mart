@@ -9,6 +9,7 @@ import { Footer } from './components/Footer'
 import { WhatsAppSupportButton } from './components/WhatsAppSupport'
 import { ShoppingAssistant } from './components/ShoppingAssistant'
 import { ToastContainer } from './components/ToastContainer'
+import { BrandLoadingScreen } from './components/BrandLoader'
 import { notify } from './lib/toast'
 import { api } from './lib/api'
 import { handleImageFallback } from './utils/imageFallback'
@@ -42,6 +43,7 @@ function RouteLoadingBar() {
 }
 
 const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })))
+const DeliveryPage = lazy(() => import('./pages/DeliveryPage').then((module) => ({ default: module.DeliveryPage })))
 const ShopPage = lazy(() => import('./pages/ShopPage').then((module) => ({ default: module.ShopPage })))
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage').then((module) => ({ default: module.ProductDetailPage })))
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage').then((module) => ({ default: module.CheckoutPage })))
@@ -176,9 +178,10 @@ export default function App() {
           exit={{ opacity: 0, y: -5 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Suspense fallback={<main className="route-loading">Loading Grovia…</main>}>
+          <Suspense fallback={<BrandLoadingScreen label="Loading your market" />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/delivery" element={<DeliveryPage />} />
               <Route path="/shop" element={<ShopPage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
