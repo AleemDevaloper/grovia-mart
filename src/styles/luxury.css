@@ -156,6 +156,27 @@ p {
   transition: transform 0.3s var(--ease), background 0.25s, box-shadow 0.3s var(--ease), color 0.25s, border-color 0.25s;
 }
 
+.btn,
+.tool-btn,
+.menu-trigger,
+.announcement__location,
+.mobile-location-link,
+.mobile-install-link {
+  position: relative;
+  isolation: isolate;
+}
+
+.btn > svg,
+.tool-btn > svg,
+.tool-btn__label,
+.menu-trigger > svg,
+.announcement__location > svg,
+.mobile-location-link > *,
+.mobile-install-link > * {
+  position: relative;
+  z-index: 2;
+}
+
 .btn::before {
   content: '';
   position: absolute;
@@ -173,6 +194,64 @@ p {
 .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 32px -20px rgba(10, 31, 21, 0.6);
+}
+
+.btn::after,
+.tool-btn::after,
+.menu-trigger::after,
+.announcement__location::after,
+.mobile-location-link::after,
+.mobile-install-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--grovia-btn-angle),
+    transparent 0deg 175deg,
+    rgba(215, 255, 122, 0.96) 205deg,
+    #fff 225deg,
+    rgba(215, 255, 122, 0.96) 244deg,
+    rgba(166, 132, 86, 0.9) 276deg,
+    transparent 320deg 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px rgba(215, 255, 122, 0.75)) drop-shadow(0 0 8px rgba(166, 132, 86, 0.5));
+  transition: opacity 0.2s ease, filter 0.2s ease;
+  animation: groviaButtonBorder 2.2s linear infinite paused;
+}
+
+@property --grovia-btn-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.btn:hover::after,
+.btn:focus-visible::after,
+.tool-btn:hover::after,
+.tool-btn:focus-visible::after,
+.menu-trigger:hover::after,
+.menu-trigger:focus-visible::after,
+.announcement__location:hover::after,
+.announcement__location:focus-visible::after,
+.mobile-location-link:hover::after,
+.mobile-location-link:focus-visible::after,
+.mobile-install-link:hover::after,
+.mobile-install-link:focus-visible::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+@keyframes groviaButtonBorder {
+  to { --grovia-btn-angle: 360deg; }
 }
 
 .btn:active {
@@ -2898,6 +2977,49 @@ p {
   }
 }
 
+@media (hover: none), (pointer: coarse), (max-width: 1024px) {
+  .btn:hover,
+  .tool-btn:hover,
+  .menu-trigger:hover {
+    transform: none;
+  }
+
+  .btn:hover::before {
+    transform: translateX(-130%);
+  }
+
+  .btn:hover svg,
+  .tool-btn:hover svg {
+    transform: none;
+  }
+
+  .btn:hover::after,
+  .tool-btn:hover::after,
+  .menu-trigger:hover::after,
+  .announcement__location:hover::after,
+  .mobile-location-link:hover::after,
+  .mobile-install-link:hover::after {
+    opacity: 0;
+    animation: none;
+  }
+
+  .btn:active::after,
+  .tool-btn:active::after,
+  .menu-trigger:active::after,
+  .announcement__location:active::after,
+  .mobile-location-link:active::after,
+  .mobile-install-link:active::after,
+  .btn:focus-visible::after,
+  .tool-btn:focus-visible::after,
+  .menu-trigger:focus-visible::after,
+  .announcement__location:focus-visible::after,
+  .mobile-location-link:focus-visible::after,
+  .mobile-install-link:focus-visible::after {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero__seal {
     animation: none;
@@ -2905,6 +3027,15 @@ p {
 
   .btn::before {
     display: none;
+  }
+
+  .btn::after,
+  .tool-btn::after,
+  .menu-trigger::after,
+  .announcement__location::after,
+  .mobile-location-link::after,
+  .mobile-install-link::after {
+    animation: none;
   }
 
   .product-card,
