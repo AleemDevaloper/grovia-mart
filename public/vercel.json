@@ -2,6 +2,7 @@
   "redirects": [
     { "source": "/shop/", "destination": "/shop", "permanent": true },
     { "source": "/delivery/", "destination": "/delivery", "permanent": true },
+    { "source": "/deli/", "destination": "/deli", "permanent": true },
     { "source": "/product/:id/", "destination": "/product/:id", "permanent": true },
     { "source": "/checkout/", "destination": "/checkout", "permanent": true },
     { "source": "/account/", "destination": "/account", "permanent": true },
@@ -21,6 +22,8 @@
     { "source": "/shop/", "destination": "/index.html" },
     { "source": "/delivery", "destination": "/index.html" },
     { "source": "/delivery/", "destination": "/index.html" },
+    { "source": "/deli", "destination": "/index.html" },
+    { "source": "/deli/", "destination": "/index.html" },
     { "source": "/product/:id", "destination": "/index.html" },
     { "source": "/checkout", "destination": "/index.html" },
     { "source": "/checkout/", "destination": "/index.html" },

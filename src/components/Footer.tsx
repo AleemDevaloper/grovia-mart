@@ -57,6 +57,7 @@ export function Footer() {
                   <Link to={`/shop?category=${encodeURIComponent(category.slug)}`}>{category.name}</Link>
                 </li>
               ))}
+              <li><Link to="/deli">Deli &amp; bakery</Link></li>
               <li><Link to="/shop?discount=true">Offers &amp; deals</Link></li>
               <li><Link to="/wishlist">Saved items</Link></li>
             </ul>
