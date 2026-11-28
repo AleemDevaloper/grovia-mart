@@ -4540,7 +4540,7 @@
   letter-spacing: -0.05em;
 }
 
-.auth-form-wrap > p {
+.auth-mode-content > p {
   margin-top: -8px;
   color: var(--muted);
   font-size: 12px;
@@ -4561,9 +4561,38 @@
 }
 
 .auth-tabs button.active {
-  background: var(--paper);
-  color: var(--forest);
-  box-shadow: var(--shadow-xs);
+  background: #f0f1ee;
+  color: #657067;
+  box-shadow: inset 0 0 0 1px rgba(62, 76, 65, 0.08);
+}
+
+.auth-mode-content {
+  display: grid;
+  gap: 15px;
+}
+
+.install-guide__steps {
+  display: grid;
+  gap: 12px;
+  margin: -4px 0 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink);
+  font-size: 13px;
+  list-style: none;
+}
+
+.install-guide__steps li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.install-guide__steps li > svg {
+  flex: 0 0 auto;
+  color: var(--green);
 }
 
 .integration-notice {

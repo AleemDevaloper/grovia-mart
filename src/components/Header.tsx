@@ -9,6 +9,7 @@ import {
   MapPin,
   Menu,
   Search,
+  Share,
   ShoppingBag,
   Sparkles,
   Truck,
@@ -22,6 +23,16 @@ import { cartCount, useStore } from '../store'
 import { handleImageFallback } from '../utils/imageFallback'
 import { publicAssetUrl } from '../utils/publicAssetUrl'
 import { Logo } from './Logo'
+
+let deferredInstallPrompt: BeforeInstallPromptEvent | null = null
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (event: Event) => {
+    event.preventDefault()
+    deferredInstallPrompt = event as BeforeInstallPromptEvent
+    window.dispatchEvent(new Event('grovia:installprompt'))
+  })
+}
 
 export function Header() {
   const navigate = useNavigate()
@@ -41,7 +52,7 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [installGuideOpen, setInstallGuideOpen] = useState(false)
   const [locationGuideOpen, setLocationGuideOpen] = useState(false)
-  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(() => deferredInstallPrompt)
   const [appInstalled, setAppInstalled] = useState(false)
   const [installError, setInstallError] = useState('')
   const [locationError, setLocationError] = useState('')
@@ -67,10 +78,7 @@ export function Header() {
     const updateInstalled = () => {
       setAppInstalled(displayMode.matches || ('standalone' in navigator && navigator.standalone === true))
     }
-    const onBeforeInstall = (event: Event) => {
-      event.preventDefault()
-      setInstallPrompt(event as BeforeInstallPromptEvent)
-    }
+    const onBeforeInstall = () => setInstallPrompt(deferredInstallPrompt)
     const onInstalled = () => {
       setAppInstalled(true)
       setInstallPrompt(null)
@@ -79,11 +87,11 @@ export function Header() {
 
     updateInstalled()
     displayMode.addEventListener('change', updateInstalled)
-    window.addEventListener('beforeinstallprompt', onBeforeInstall)
+    window.addEventListener('grovia:installprompt', onBeforeInstall)
     window.addEventListener('appinstalled', onInstalled)
     return () => {
       displayMode.removeEventListener('change', updateInstalled)
-      window.removeEventListener('beforeinstallprompt', onBeforeInstall)
+      window.removeEventListener('grovia:installprompt', onBeforeInstall)
       window.removeEventListener('appinstalled', onInstalled)
     }
   }, [])
@@ -138,12 +146,14 @@ export function Header() {
     try {
       await installPrompt.prompt()
       const choice = await installPrompt.userChoice
+      deferredInstallPrompt = null
       setInstallPrompt(null)
       if (choice.outcome === 'accepted') {
         setAppInstalled(true)
         setInstallGuideOpen(false)
       }
     } catch {
+      deferredInstallPrompt = null
       setInstallPrompt(null)
       setInstallError('Your browser could not open the install prompt. Use the browser menu instructions below instead.')
     }
@@ -188,10 +198,10 @@ export function Header() {
     || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
   const isAndroid = /Android/i.test(navigator.userAgent)
   const installInstructions = isAppleMobile
-    ? 'Open this page in Safari, tap Share, then choose Add to Home Screen.'
+    ? 'In Safari, tap Share, choose Add to Home Screen, then tap Add.'
     : isAndroid
-      ? 'Open your browser menu and tap Install app or Add to Home screen.'
-      : 'Use the install icon in your browser’s address bar, or choose Install Grovia Mart from the browser menu.'
+      ? 'In Chrome, open the ⋮ menu and tap Install app or Add to Home screen.'
+      : 'Use the install icon in your browser’s address bar, or choose Install Grovia Mart from its menu.'
 
   const submitSearch = (event?: FormEvent) => {
     event?.preventDefault()
@@ -396,6 +406,20 @@ export function Header() {
               <span className="eyebrow">Grovia, wherever you shop</span>
               <h2 id="install-guide-title">Add Grovia to your home screen.</h2>
               <p>{installPrompt ? 'Install Grovia for quick access to your market, basket and orders.' : installInstructions}</p>
+              {!installPrompt && isAppleMobile && (
+                <ol className="install-guide__steps">
+                  <li><Share size={16} /> Tap <strong>Share</strong> in Safari.</li>
+                  <li>Choose <strong>Add to Home Screen</strong>.</li>
+                  <li>Tap <strong>Add</strong> to finish.</li>
+                </ol>
+              )}
+              {!installPrompt && isAndroid && (
+                <ol className="install-guide__steps">
+                  <li>Open Chrome’s <strong>⋮ menu</strong>.</li>
+                  <li>Tap <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
+                  <li>Confirm the prompt.</li>
+                </ol>
+              )}
               {installError && <p className="install-guide__error" role="alert">{installError}</p>}
               {installPrompt ? (
                 <button type="button" className="btn btn--primary btn--block" onClick={() => void installApp()}>

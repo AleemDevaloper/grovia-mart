@@ -18,6 +18,7 @@ export function ShopPage() {
   const organic = params.get('organic') === 'true'
   const discount = params.get('discount') === 'true'
   const activePreferences = Number(inStockOnly) + Number(discount) + Number(organic)
+  const activeFilterCount = Number(Boolean(query)) + Number(Boolean(category)) + Number(Boolean(minPrice || maxPrice)) + activePreferences
   const hasFilters = Boolean(query || category || minPrice || maxPrice || inStockOnly || organic || discount)
   const apiSort = sort === 'price-low' ? 'price_asc' : sort === 'price-high' ? 'price_desc' : sort
 
@@ -64,9 +65,19 @@ export function ShopPage() {
           <h1>{title}</h1>
           <p>Everyday essentials, selected with care and ready for your table.</p>
         </div>
+      </header>
+
+      <div className="shop-sticky-controls">
         <div className="shop-toolbar">
-          <button className="filter-toggle" type="button" onClick={() => setFiltersOpen(true)}>
+          <button
+            className="filter-toggle"
+            type="button"
+            onClick={() => setFiltersOpen(true)}
+            aria-label={activeFilterCount ? `Open product filters, ${activeFilterCount} active` : 'Open product filters'}
+            aria-expanded={filtersOpen}
+          >
             <SlidersHorizontal size={16} /> Filters
+            {activeFilterCount > 0 && <span className="shop-filter-count">{activeFilterCount}</span>}
           </button>
           <label>
             <span>Sort by</span>
@@ -81,7 +92,22 @@ export function ShopPage() {
             <ChevronDown size={14} />
           </label>
         </div>
-      </header>
+      </div>
+
+      <nav className="shop-category-rail" aria-label="Shop departments">
+        <button type="button" className={!category ? 'is-active' : ''} aria-pressed={!category} onClick={() => updateParams({ category: null })}>All groceries</button>
+        {categories.map((item) => (
+          <button
+            type="button"
+            className={category === item.slug ? 'is-active' : ''}
+            aria-pressed={category === item.slug}
+            onClick={() => updateParams({ category: item.slug })}
+            key={item.id}
+          >
+            {item.name}
+          </button>
+        ))}
+      </nav>
 
       <div className="shop-layout">
         <aside className={`shop-sidebar ${filtersOpen ? 'open' : ''}`} aria-label="Product filters">

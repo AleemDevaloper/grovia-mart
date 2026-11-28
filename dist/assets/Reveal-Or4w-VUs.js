@@ -1,0 +1,1 @@
+import{v as e}from"./index-BHr5Adfa.js";import{E as t}from"./api-BT7eA8Jm.js";var n=t();function r({children:t,delay:r=0,y:i=22,className:a}){return(0,n.jsx)(e.div,{className:a,initial:{opacity:0,y:i},whileInView:{opacity:1,y:0},viewport:{once:!0,amount:.14},transition:{duration:.6,ease:[.22,1,.36,1],delay:r},children:t})}export{r as t};

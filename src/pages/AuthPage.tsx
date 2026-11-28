@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Check, Leaf, LockKeyhole, MapPin, Pencil, Plus, Trash2 } from 'lucide-react'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
@@ -37,6 +38,12 @@ export function AuthPage() {
   const [busy, setBusy] = useState(false)
   const { user, login, register } = useAuth()
   const navigate = useNavigate()
+
+  const changeMode = (nextMode: Mode) => {
+    setError('')
+    setMessage('')
+    setMode(nextMode)
+  }
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -96,34 +103,45 @@ export function AuthPage() {
         <div className="auth-form-wrap">
           {mode !== 'reset' && mode !== 'set-password' && (
             <div className="auth-tabs" role="tablist" aria-label="Account access">
-              <button type="button" className={mode === 'sign-in' ? 'active' : ''} onClick={() => setMode('sign-in')} role="tab" aria-selected={mode === 'sign-in'}>Sign in</button>
-              <button type="button" className={mode === 'sign-up' ? 'active' : ''} onClick={() => setMode('sign-up')} role="tab" aria-selected={mode === 'sign-up'}>Create account</button>
+              <button type="button" className={mode === 'sign-in' ? 'active' : ''} onClick={() => changeMode('sign-in')} role="tab" aria-selected={mode === 'sign-in'}>Sign in</button>
+              <button type="button" className={mode === 'sign-up' ? 'active' : ''} onClick={() => changeMode('sign-up')} role="tab" aria-selected={mode === 'sign-up'}>Create account</button>
             </div>
           )}
-          <h2>{mode === 'sign-in' ? 'Welcome back' : mode === 'sign-up' ? 'Join Grovia' : mode === 'set-password' ? 'Choose a new password' : 'Reset your password'}</h2>
-          <p>{mode === 'sign-in' ? 'Sign in to pick up where you left off.' : mode === 'sign-up' ? 'Create an account for a fresher everyday.' : mode === 'set-password' ? 'Set a new password for your Grovia account.' : 'We’ll send instructions if an account exists for this email.'}</p>
-          <div className="integration-notice"><LockKeyhole size={17} /><span><strong>Secure Grovia account</strong><small>Your account is managed by Grovia’s Laravel service.</small></span></div>
-          {mode === 'set-password' && !resetToken ? (
-            <div className="auth-error" role="alert">This reset link is incomplete or invalid. Request a new password reset link to continue.</div>
-          ) : <form onSubmit={(event) => void submit(event)}>
-            {mode === 'sign-up' && <>
-              <label>Full name<input required maxLength={100} value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" autoComplete="name" /></label>
-              <label><span>Referral code <small className="optional-label">(optional)</small></span><input maxLength={20} value={referralCode} onChange={(event) => setReferralCode(event.target.value.toUpperCase())} placeholder="Enter a friend’s code" autoComplete="off" /></label>
-            </>}
-            <label>Email address<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" /></label>
-            {mode !== 'reset' && (
-              <label>Password<input required minLength={8} type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 8 characters" autoComplete={mode === 'sign-in' ? 'current-password' : 'new-password'} /></label>
-            )}
-            {(mode === 'sign-up' || mode === 'set-password') && (
-              <label>Confirm password<input required minLength={8} type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} autoComplete="new-password" /></label>
-            )}
-            {error && <div className="auth-error" role="alert">{error}</div>}
-            {message && <div className="auth-success" role="status">{message}</div>}
-            <button type="submit" disabled={busy}>{busy ? 'Please wait…' : mode === 'sign-in' ? 'Sign in' : mode === 'sign-up' ? 'Create account' : mode === 'set-password' ? 'Update password' : 'Send reset link'} <ArrowRight size={16} /></button>
-          </form>}
-          {mode === 'sign-in' && <button className="forgot-link" type="button" onClick={() => { setError(''); setMessage(''); setMode('reset') }}>Forgot password?</button>}
-          {(mode === 'reset' || mode === 'set-password') && <button className="forgot-link" type="button" onClick={() => { setError(''); setMessage(''); setMode(mode === 'set-password' ? 'reset' : 'sign-in') }}>{mode === 'set-password' ? 'Request a new reset link' : 'Back to sign in'}</button>}
-          <small className="auth-legal">By continuing, you agree to Grovia Mart’s store policies.</small>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              className="auth-mode-content"
+              key={mode}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+            >
+              <h2>{mode === 'sign-in' ? 'Welcome back' : mode === 'sign-up' ? 'Join Grovia' : mode === 'set-password' ? 'Choose a new password' : 'Reset your password'}</h2>
+              <p>{mode === 'sign-in' ? 'Sign in to pick up where you left off.' : mode === 'sign-up' ? 'Create an account for a fresher everyday.' : mode === 'set-password' ? 'Set a new password for your Grovia account.' : 'We’ll send instructions if an account exists for this email.'}</p>
+              <div className="integration-notice"><LockKeyhole size={17} /><span><strong>Secure Grovia account</strong><small>Your account is managed by Grovia’s Laravel service.</small></span></div>
+              {mode === 'set-password' && !resetToken ? (
+                <div className="auth-error" role="alert">This reset link is incomplete or invalid. Request a new password reset link to continue.</div>
+              ) : <form onSubmit={(event) => void submit(event)}>
+                {mode === 'sign-up' && <>
+                  <label>Full name<input required maxLength={100} value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" autoComplete="name" /></label>
+                  <label><span>Referral code <small className="optional-label">(optional)</small></span><input maxLength={20} value={referralCode} onChange={(event) => setReferralCode(event.target.value.toUpperCase())} placeholder="Enter a friend’s code" autoComplete="off" /></label>
+                </>}
+                <label>Email address<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" /></label>
+                {mode !== 'reset' && (
+                  <label>Password<input required minLength={8} type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 8 characters" autoComplete={mode === 'sign-in' ? 'current-password' : 'new-password'} /></label>
+                )}
+                {(mode === 'sign-up' || mode === 'set-password') && (
+                  <label>Confirm password<input required minLength={8} type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} autoComplete="new-password" /></label>
+                )}
+                {error && <div className="auth-error" role="alert">{error}</div>}
+                {message && <div className="auth-success" role="status">{message}</div>}
+                <button type="submit" disabled={busy}>{busy ? 'Please wait…' : mode === 'sign-in' ? 'Sign in' : mode === 'sign-up' ? 'Create account' : mode === 'set-password' ? 'Update password' : 'Send reset link'} <ArrowRight size={16} /></button>
+              </form>}
+              {mode === 'sign-in' && <button className="forgot-link" type="button" onClick={() => changeMode('reset')}>Forgot password?</button>}
+              {(mode === 'reset' || mode === 'set-password') && <button className="forgot-link" type="button" onClick={() => changeMode(mode === 'set-password' ? 'reset' : 'sign-in')}>{mode === 'set-password' ? 'Request a new reset link' : 'Back to sign in'}</button>}
+              <small className="auth-legal">By continuing, you agree to Grovia Mart’s store policies.</small>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
     </main>

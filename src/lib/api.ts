@@ -38,7 +38,14 @@ import type {
   User,
 } from '../types'
 
-export const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? 'http://127.0.0.1:8000/api'
+const configuredApiBase = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '')
+const productionApiBase = 'https://gr.asiancon.com/api'
+const invalidPlaceholderApi = /^https?:\/\/[^/]+\.invalid(?:\/|$)/i.test(configuredApiBase ?? '')
+export const API_BASE = configuredApiBase && !invalidPlaceholderApi
+  ? configuredApiBase
+  : import.meta.env.PROD
+    ? productionApiBase
+    : configuredApiBase ?? 'http://127.0.0.1:8000/api'
 export const TOKEN_KEY = 'grovia.auth.token'
 export const USER_KEY = 'grovia.auth.user'
 

@@ -89,6 +89,10 @@ export function HomePage() {
     copy: value.copy,
   })) ?? values
   const heroContent = siteHome?.hero
+  const primaryHeroCta = heroContent?.primaryCta?.trim()
+  const primaryHeroCtaLabel = primaryHeroCta && primaryHeroCta.toLowerCase() !== 'shop the market'
+    ? primaryHeroCta
+    : 'Shop groceries'
 
   const searchGrovia = (term: string) => {
     const query = term.trim()
@@ -201,12 +205,29 @@ export function HomePage() {
                 transition={{ duration: 0.6, delay: 0.36 }}
               >
                 <Link to="/shop" className="btn btn--primary btn--lg">
-                  {heroContent?.primaryCta ?? 'Shop the market'} <ArrowRight size={17} />
+                  {primaryHeroCtaLabel} <ArrowRight size={17} />
                 </Link>
                 <Link to="/shop?discount=true" className="btn btn--outline btn--lg">
                   {heroContent?.secondaryCta ?? 'Today’s offers'}
                 </Link>
               </motion.div>
+
+              <nav
+                className="hero-category-shortcuts"
+                aria-label={categories.length > 0 ? 'Shop departments' : 'Quick grocery searches'}
+              >
+                <span>{categories.length > 0 ? 'Shop a category' : 'Quick shop'}</span>
+                {categories.length > 0
+                  ? categories.slice(0, 4).map((category) => (
+                    <Link key={category.slug} to={`/shop?category=${encodeURIComponent(category.slug)}`}>
+                      {category.name}
+                    </Link>
+                  ))
+                  : popularSearches.map((term) => (
+                    <Link key={term} to={`/shop?q=${encodeURIComponent(term)}`}>{term}</Link>
+                  ))
+                }
+              </nav>
 
               <motion.div
                 className="hero__proof"
